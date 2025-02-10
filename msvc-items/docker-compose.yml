@@ -1,0 +1,31 @@
+services:
+  eureka-server:
+    container_name: eureka-server
+    image: eureka-server-eureka-server:latest
+    ports:
+      - "8761:8761"
+    networks:
+      - spring
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/eureka/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  msvc-items:
+    container_name: msvc-items
+    image: msvc-items:1.0.0
+    ports:
+      - "9002:9002"
+    environment:
+      - EUREKA_APP_HOST=eureka-server
+    networks:
+      - spring
+    depends_on:
+      - eureka-server
+    links:
+      - eureka-server
+
+
+networks:
+  spring:

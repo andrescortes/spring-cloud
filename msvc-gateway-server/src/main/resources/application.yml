@@ -1,0 +1,32 @@
+server:
+  port: ${APP_PORT:8090}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_APP_HOST:localhost}:8761/eureka/
+
+spring:
+  application:
+    name: msvc-gateway-server
+  cloud:
+    gateway:
+      routes:
+        - id: msvc-products
+          uri: lb://msvc-products
+          predicates:
+            - Path=/api/v1/products/**
+          filters:
+            - StripPrefix=0
+        - id: msvc-items
+          uri: lb://msvc-items
+          predicates:
+            - Path=/api/v1/items/**
+          filters:
+            - StripPrefix=0
+logging:
+  level:
+    web: DEBUG
+    spring: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.netflix.eureka: DEBUG

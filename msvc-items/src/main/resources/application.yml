@@ -1,0 +1,27 @@
+server:
+  servlet:
+    context-path: /api/v1
+  port: ${APP_PORT:9002}
+spring:
+  application:
+    name: msvc-items
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_APP_HOST:localhost}:8761/eureka/
+
+app:
+  load-balancer:
+    products: http://${PRODUCTS_APP_HOST:msvc-products}/api/v1/products
+  feign:
+    products:
+      name: ${PRODUCTS_NAME:msvc-products}
+      url: http://localhost:9000/api/v1/products
+
+
+#logging:
+#  level:
+#    org.springframework.cloud: DEBUG
+#    org.springframework.web: DEBUG
+#    org.springframework.data.jpa: DEBUG

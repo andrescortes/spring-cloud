@@ -1,0 +1,9 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+### items
+GET http://localhost:9002/api/v1/items
+
+### item by id
+GET http://localhost:9002/api/v1/items/6

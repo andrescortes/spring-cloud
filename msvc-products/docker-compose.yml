@@ -1,0 +1,78 @@
+services:
+  eureka-server:
+    container_name: eureka-server
+    image:  eureka-server:latest
+    ports:
+      - "8761:8761"
+    networks:
+      - spring
+
+  products:
+    image:  msvc-products:latest
+    container_name: products
+    environment:
+      - APP_PORT=9000
+      - DB_NAME=db_cloud
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
+      - EUREKA_APP_HOST=eureka-server
+    ports:
+      - "9000:9000"
+    networks:
+      - spring
+    depends_on:
+      - db
+      - eureka-server
+
+  products2:
+    image:  msvc-products:latest
+    container_name: products2
+    environment:
+      - APP_PORT=9001
+      - DB_NAME=db_cloud
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
+      - EUREKA_APP_HOST=eureka-server
+    ports:
+      - "9001:9001"
+    networks:
+      - spring
+    depends_on:
+      - eureka-server
+      - db
+
+  items:
+    container_name: items
+    image: msvc-items:latest
+    ports:
+      - "9002:9002"
+    environment:
+      - EUREKA_APP_HOST=eureka-server
+    networks:
+      - spring
+    depends_on:
+      - eureka-server
+
+  db:
+    image: postgres:16-alpine
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db_cloud
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - spring
+
+networks:
+  spring:
+    name: spring
+    driver: bridge
+volumes:
+  db:
+    name: postgres_data
