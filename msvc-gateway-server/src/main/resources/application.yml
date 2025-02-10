@@ -19,17 +19,21 @@ spring:
           filters:
             - StripPrefix=0
             - SampleCookie=Hello from SampleCookie, user, Andres
-#            - name: SampleCookie
-#              args:
-#                message: Hello from SampleCookie
-#                name: user
-#                value: Andres
+        #            - name: SampleCookie
+        #              args:
+        #                message: Hello from SampleCookie
+        #                name: user
+        #                value: Andres
         - id: msvc-items
           uri: lb://msvc-items
           predicates:
             - Path=/api/v1/items/**
           filters:
             - StripPrefix=0
+            - AddRequestHeader=Authorization,Bearer ${JWT_TOKEN:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDI}
+            - AddResponseHeader=Authorization,Bearer ${JWT_TOKEN:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDI}
+            - AddRequestParameter=name, Andres
+            - SetResponseHeader=Content-Type, text/plain
 logging:
   level:
     web: DEBUG
