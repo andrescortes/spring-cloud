@@ -3,7 +3,10 @@ GET https://examples.http-client.intellij.net/get
     ?generated-in=IntelliJ IDEA
 
 ### get products
-GET http://localhost:8090/api/v1/products
+GET http://localhost:8090/api/v1/products?color=green
+
+token=12345
+Cookie=color=blue;
 
 ### items
 GET http://localhost:8090/api/v1/items

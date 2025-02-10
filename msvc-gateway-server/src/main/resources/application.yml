@@ -16,6 +16,10 @@ spring:
           uri: lb://msvc-products
           predicates:
             - Path=/api/v1/products/**
+#            - Header=token, 12345
+#            - Method=GET, POST
+#            - Query=color
+#            - Cookie=color, blue
           filters:
             - StripPrefix=0
             - SampleCookie=Hello from SampleCookie, user, Andres
