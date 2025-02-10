@@ -18,6 +18,12 @@ spring:
             - Path=/api/v1/products/**
           filters:
             - StripPrefix=0
+            - SampleCookie=Hello from SampleCookie, user, Andres
+#            - name: SampleCookie
+#              args:
+#                message: Hello from SampleCookie
+#                name: user
+#                value: Andres
         - id: msvc-items
           uri: lb://msvc-items
           predicates:

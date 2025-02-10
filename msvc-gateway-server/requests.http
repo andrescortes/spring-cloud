@@ -6,4 +6,4 @@ GET https://examples.http-client.intellij.net/get
 GET http://localhost:8090/api/v1/products
 
 ### items
-GET http://localhost:8090/api/v1/items/6
+GET http://localhost:8090/api/v1/items
