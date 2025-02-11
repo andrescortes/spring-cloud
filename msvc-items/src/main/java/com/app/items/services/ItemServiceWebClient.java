@@ -45,8 +45,8 @@ public class ItemServiceWebClient implements ItemService {
 //                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.empty())
                 .bodyToMono(Product.class)
                 .map(product -> new Item(product, GeneratorRandomNumber.getRandomNumber()))
-                .onErrorResume(WebClientResponseException.class,
-                        ex -> ex.getStatusCode().value() == 404 ? Mono.empty() : Mono.error(ex))
+//                .onErrorResume(WebClientResponseException.class,
+//                        ex -> ex.getStatusCode().value() == 404 ? Mono.empty() : Mono.error(ex))
                 .blockOptional();
     }
 }

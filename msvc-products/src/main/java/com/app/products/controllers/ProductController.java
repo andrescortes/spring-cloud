@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/products")
@@ -23,7 +24,15 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable Long id) {
+    public ResponseEntity<Product> getProduct(@PathVariable Long id) throws InterruptedException {
+        if (id.equals(10L)) {
+            throw new IllegalStateException("Product with id 10 not found");
+        }
+
+        if(id.equals(6L)){
+            TimeUnit.SECONDS.sleep(3L);
+        }
+
         return productService
                 .findById(id)
                 .map(ResponseEntity::ok)

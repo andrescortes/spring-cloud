@@ -11,6 +11,27 @@ eureka:
     service-url:
       defaultZone: http://${EUREKA_APP_HOST:localhost}:8761/eureka/
 
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 6
+        failureRateThreshold: 50
+        wait-duration-in-open-state: 20s
+        permittedNumberOfCallsInHalfOpenState: 4
+        slow-call-duration-threshold: 3s
+        slow-call-rate-threshold: 50
+    instances:
+      getItemById:
+        base-config: default
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 4s
+    instances:
+      getItemById:
+        base-config: default
+
 app:
   load-balancer:
     products: http://${PRODUCTS_APP_HOST:msvc-products}/api/v1/products
@@ -18,10 +39,3 @@ app:
     products:
       name: ${PRODUCTS_NAME:msvc-products}
       url: http://localhost:9000/api/v1/products
-
-
-#logging:
-#  level:
-#    org.springframework.cloud: DEBUG
-#    org.springframework.web: DEBUG
-#    org.springframework.data.jpa: DEBUG
