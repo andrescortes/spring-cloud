@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: file:///C:/Users/andre/Documents/courses/backend/fh/spring-cloud/config-server/config-repo
+
+server:
+  port: ${APP_PORT:8888}

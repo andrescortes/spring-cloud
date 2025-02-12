@@ -23,6 +23,11 @@ spring:
           filters:
             - StripPrefix=0
             - SampleCookie=Hello from SampleCookie, user, Andres
+            - name: CircuitBreaker
+              args:
+                name: products
+                statusCodes: 500
+                fallbackUri: forward:/api/v1/items/5
         #            - name: SampleCookie
         #              args:
         #                message: Hello from SampleCookie
@@ -44,3 +49,26 @@ logging:
     spring: DEBUG
     org.springframework.cloud.gateway: DEBUG
     org.springframework.cloud.netflix.eureka: DEBUG
+    org.springframework.cloud.circuitbreaker: DEBUG
+
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 6
+        failureRateThreshold: 50
+        wait-duration-in-open-state: 20s
+        permittedNumberOfCallsInHalfOpenState: 4
+        slow-call-duration-threshold: 3s
+        slow-call-rate-threshold: 50
+    instances:
+      products:
+        base-config: default
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 3s
+    instances:
+      products:
+        base-config: default
