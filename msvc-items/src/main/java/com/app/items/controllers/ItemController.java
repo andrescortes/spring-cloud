@@ -8,7 +8,10 @@ import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +22,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+@RefreshScope
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
@@ -31,6 +37,10 @@ public class ItemController {
     @Qualifier("itemServiceWebClient")
     private final ItemService itemService;
     private final CircuitBreakerFactory circuitBreakerFactory;
+    private final Environment environment;
+
+    @Value("${conf.text}")
+    private String text;
 
     @GetMapping
     public ResponseEntity<List<Item>> getAllItems(@RequestParam(value = "name", required = false) String name, @RequestHeader(value = "Authorization", required = false) String authorization) {
@@ -85,6 +95,23 @@ public class ItemController {
                             return ResponseEntity.ok(new Item(product, 5));
                         }
                 );
+    }
+
+    @GetMapping("/fetch-configs")
+    public ResponseEntity<Map<String, String>> getConfig(@Value("${server.port}") String port) {
+        Map<String, String> json = new HashMap<>();
+        json.put("text", text);
+        json.put("port", port);
+        json.put("name", environment.getProperty("conf.author.name", String.class, "John Doe"));
+        json.put("email", environment.getProperty("conf.author.email", String.class, "john@doe.com"));
+        if (environment.getActiveProfiles().length > 0 && environment.getActiveProfiles()[0].equals("dev")) {
+            json.put("env", "dev");
+        }
+        if (environment.getActiveProfiles().length > 0 && environment.getActiveProfiles()[0].equals("pdn")) {
+            json.put("env", "pdn");
+        }
+        log.info("Config fetched: {}", json);
+        return ResponseEntity.ok(json);
     }
 
     private ResponseEntity<Item> fallbackGetItemById(Throwable e) {

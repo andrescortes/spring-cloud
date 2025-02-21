@@ -1,4 +1,0 @@
-server:
-  port: 8005
-configuration:
-  text: configuration to be used in the application msvc-items

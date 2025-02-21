@@ -5,7 +5,8 @@ spring:
     config:
       server:
         git:
-          uri: file:///C:/Users/andre/Documents/courses/backend/fh/spring-cloud/config-server/config-repo
+#          uri: file:///C:/Users/andre/Documents/courses/backend/fh/config-server
+          uri: https://github.com/andrescortes/config-server
 
 server:
   port: ${APP_PORT:8888}

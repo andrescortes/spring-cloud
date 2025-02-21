@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: msvc-items
+  profiles:
+    active: dev
+  cloud:
+    config:
+      uri: http://${CONFIG_SERVER_APP_HOST:localhost}:8888
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
